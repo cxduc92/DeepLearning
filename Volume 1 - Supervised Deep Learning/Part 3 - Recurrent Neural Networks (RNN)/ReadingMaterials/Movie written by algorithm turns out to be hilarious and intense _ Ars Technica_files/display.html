@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!-- saved from url=(0167)https://related.assistpub.com/display.html?_otarOg=https%3A%2F%2Farstechnica.com&_cpub=AAXHJ5M8W&_csvr=2911_246&_cgdpr=1&_cgdprconsent=0&_cusp_status=0&_cusp_consent=0 -->
+<html data-adblockkey="MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMLlOP3Rke738aeqtDCGp0IgSY5XBv7c+brDMmurbYvOFgakGw6sUG8fwt6VkjnOX9s9Kba1Drg2M9Bye/F3x7MCAwEAAQ==_wGrTM/u9EHDoJKWnl44BL6GTrQjG0UD9MMF4y5Kpv/PpD4WZ3apxc3AwMz4iuXoQKo/0y9QKX7DpMshL3ooCzg=="><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script>
+        function isDisplayIframe(type) {
+            return type;
+        }
+
+        function isPrefetchIframe(type) {
+            return type === "prefetch_frame";
+        }
+
+        function buildDisplayUrl(srcUrl, type) {
+            srcUrl = srcUrl + "&type=" + type;
+            if (isPrefetchIframe(type)) {
+                srcUrl = "";
+            }
+            return srcUrl;
+        }
+
+        function getScriptUrl(srcUrl) {
+            if (window.name !== '') {
+                try {
+                    var iframeParams = JSON.parse(window.name);
+                    if (isDisplayIframe(iframeParams.type)) {
+                        srcUrl = buildDisplayUrl(srcUrl, iframeParams.type);
+                    }
+                } catch (e) {
+                }
+            }
+            return srcUrl;
+        }
+
+        function loadScript(scriptUrl) {
+            if (scriptUrl === "") {
+                return;
+            }
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = scriptUrl;
+            var placeTag = document.getElementsByTagName("script")[0];
+            placeTag.parentNode.insertBefore(script, placeTag);
+        }
+
+        window.aax = window.aax || {};
+        window.aax["__conf"] = {"tarOg":"https://arstechnica.com","referer":"https://arstechnica.com/gaming/2016/06/an-ai-wrote-this-movie-and-its-strangely-moving/"};
+        scriptUrl = getScriptUrl("https://c.aaxads.com/aaxd.js?pub=AAXHJ5M8W&svr=2911_246&gdpr=1&gdprconsent=0&usp_status=0&usp_consent=0");
+        loadScript(scriptUrl);
+    </script>
+</head>
+<body marginwidth="0" marginheight="0">
+
+</body></html>
