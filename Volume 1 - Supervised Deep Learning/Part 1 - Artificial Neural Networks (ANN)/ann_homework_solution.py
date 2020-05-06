@@ -1,3 +1,12 @@
+"""
+
+    Artificial Neural Network for classification
+    Data set: Churn_Modelling.csv
+
+    Date: 04.05.2020
+    Author: Duc Cu
+
+"""
 # Artificial Neural Network
 
 # Installing Theano
@@ -9,68 +18,89 @@
 # Installing Keras
 # pip install --upgrade keras
 
-# Part 1 - Data Preprocessing
-
 # Importing the libraries
-import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
-
-# Importing the dataset
-dataset = pd.read_csv('Churn_Modelling.csv')
-X = dataset.iloc[:, 3:13].values
-y = dataset.iloc[:, 13].values
-
-# Encoding categorical data
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-labelencoder_X_1 = LabelEncoder()
-X[:, 1] = labelencoder_X_1.fit_transform(X[:, 1])
-labelencoder_X_2 = LabelEncoder()
-X[:, 2] = labelencoder_X_2.fit_transform(X[:, 2])
-#onehotencoder = OneHotEncoder(categorical_features = [1])
-#X = onehotencoder.fit_transform(X).toarray()
-#X = X[:, 1:]
-
-# Splitting the dataset into the Training set and Test set
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2, random_state = 0)
-
-# Feature Scaling
-from sklearn.preprocessing import StandardScaler
-sc = StandardScaler()
-X_train = sc.fit_transform(X_train)
-X_test = sc.transform(X_test)
-
-# Part 2 - Now let's make the ANN!
-
-# Importing the Keras libraries and packages
-import keras
+import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import confusion_matrix
+from keras.models import load_model
+
+#------------------------- Part 1 - Data Preprocessing------------------------
+
+# Importing the dataset
+DATASET = pd.read_csv('Churn_Modelling.csv')
+X = DATASET.iloc[:, 3:13].values
+Y = DATASET.iloc[:, 13].values
+
+# Encoding categorical data
+LABELENCODER_X_1 = LabelEncoder()
+X[:, 1] = LABELENCODER_X_1.fit_transform(X[:, 1])
+LABELENCODER_X_2 = LabelEncoder()
+X[:, 2] = LABELENCODER_X_2.fit_transform(X[:, 2])
+
+# Splitting the dataset into the Training set and Test set
+X_TRAIN, X_TEST, Y_TRAIN, Y_TEST = train_test_split(X, Y, test_size=0.2, random_state=0)
+
+# Feature Scaling
+SC = StandardScaler()
+X_TRAIN = SC.fit_transform(X_TRAIN)
+X_TEST = SC.transform(X_TEST)
+
+#----------------------- Part 2 - Build or load ANN trained model-------------
+
+# Optionaly, you can load a model
+# load the model here
+CLASSIFIER = load_model('TrainedModel/ANN_E100_F6_S6_O1.h5')
+
+#NUM_NEURONS_FIRSTLAYER = 6
+#NUM_NEURONS_SECONDLAYER = 6
+#NUM_NEURONS_OUTPUTLAYER = 1
+#EPOCHS = 100
+#BATCH_SIZE = 10
 
 # Initialising the ANN
-classifier = Sequential()
+#CLASSIFIER = Sequential()
 
 # Adding the input layer and the first hidden layer
-classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 10))
+#CLASSIFIER.add(Dense(units=NUM_NEURONS_FIRSTLAYER,
+#                     kernel_initializer='uniform',
+#                     activation='relu',
+#                     input_dim=10))
 
 # Adding the second hidden layer
-classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
+#CLASSIFIER.add(Dense(units=NUM_NEURONS_SECONDLAYER,
+#                     kernel_initializer='uniform',
+#                     activation='relu'))
 
 # Adding the output layer
-classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
+#CLASSIFIER.add(Dense(units=NUM_NEURONS_OUTPUTLAYER,
+#                     kernel_initializer='uniform',
+#                     activation='sigmoid'))
 
 # Compiling the ANN
-classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+#CLASSIFIER.compile(optimizer='adam',
+#                   loss='binary_crossentropy',
+#                   metrics=['accuracy'])
 
 # Fitting the ANN to the Training set
-classifier.fit(X_train, y_train, batch_size = 10, epochs = 100)
+#CLASSIFIER.fit(X_TRAIN, Y_TRAIN, batch_size=BATCH_SIZE, epochs=EPOCHS)
+
+#Saving the model
+#FILE_NAME = 'TrainedModel/ANN_E{}_F{}_S{}_O{}.h5'.format(EPOCHS, NUM_NEURONS_FIRSTLAYER,
+#                                                         NUM_NEURONS_SECONDLAYER,
+#                                                         NUM_NEURONS_OUTPUTLAYER)
+#CLASSIFIER.save(FILE_NAME)
+#print("Saved model `{}` to disk".format(FILE_NAME))
 
 # Part 3 - Making predictions and evaluating the model
 
 # Predicting the Test set results
-y_pred = classifier.predict(X_test)
-y_pred = (y_pred > 0.5)
+Y_PRED = CLASSIFIER.predict(X_TEST)
+Y_PRED = (Y_PRED > 0.5)
 
 # Predicting a single new observation
 """Predict if the customer with the following informations will leave the bank:
@@ -85,9 +115,11 @@ Has Credit Card: Yes
 Is Active Member: Yes
 Estimated Salary: 50000"""
 # scale the feature with sc.transform
-new_prediction = classifier.predict(sc.transform(np.array([[0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]])))
-new_prediction = (new_prediction > 0.5)
+NEW_PREDICTION = CLASSIFIER.predict(
+    SC.transform(np.array([[0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]])))
+NEW_PREDICTION = (NEW_PREDICTION > 0.5)
+print("Prediction = {}".format(NEW_PREDICTION))
 
 # Making the Confusion Matrix
-from sklearn.metrics import confusion_matrix
-cm = confusion_matrix(y_test, y_pred)
+CM = confusion_matrix(Y_TEST, Y_PRED)
+print("CM = {}".format(CM))

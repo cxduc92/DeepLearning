@@ -17,6 +17,12 @@ from keras.layers import Conv2D
 from keras.layers import MaxPooling2D
 from keras.layers import Flatten
 from keras.layers import Dense
+from keras.models import load_model
+
+# Optionaly, you can load a model
+# load the model here
+# classifier = load_model('TrainedModel/ANN_E100_F6_S6_O1.h5')
+
 
 # Initialising the CNN
 classifier = Sequential()
@@ -81,15 +87,25 @@ test_set = test_datagen.flow_from_directory('dataset/test_set',
                                             batch_size = 32,
                                             class_mode = 'binary')
 
-# steps_per_epoch = number of image in the training set. In this case we have 8000 iamges in training set
+# steps_per_epoch = number of image in the training set. In this case we have 8000 images in training set
 # steps_per_epoch = 8000
 # epochs = number of epoch we want to train for our training set
 # validation_steps = number of test images. In this case, we have 2000 images in test set
+NUM_TRAINING_SAMPLES = 8000
+EPOCHS = 1
+NUM_VALIDATION_SAMPLES = 2000
+
 classifier.fit_generator(training_set,
-                         steps_per_epoch = 8000,
-                         epochs = 5,
+                         steps_per_epoch = NUM_TRAINING_SAMPLES,
+                         epochs = EPOCHS,
                          validation_data = test_set,
-                         validation_steps = 2000)
+                         validation_steps = NUM_VALIDATION_SAMPLES)
+#Saving the model
+FILE_NAME = 'TrainedModel/CNN_E{}_TS{}_VS{}.h5'.format(EPOCHS,
+                                                       NUM_TRAINING_SAMPLES,
+                                                       NUM_VALIDATION_SAMPLES)
+classifier.save(FILE_NAME)
+print("Saved model `{}` to disk".format(FILE_NAME))
 
 # Part 3 - Making new predictions
 
